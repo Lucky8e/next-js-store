@@ -7,9 +7,12 @@ function ProductRating({ productId }: { productId: string }) {
 
   const className = `flex gap-1 items-center text-md mt-1 mb-4`;
   const countValue = `(${count}) reviews`;
+  const handleClick = () => {
+    console.log("Favorite clicked for product:", productId);
+  };
   return (
     <span className={className}>
-      <FaStar className="w-3 h-3" />
+      <FaStar className="w-3 h-3" onClick={handleClick} />
       {rating}
       {countValue}
     </span>
