@@ -6,7 +6,7 @@ import FavoriteToggleButton from "@/components/products/FavoriteToggleButton";
 import AddToCart from "@/components/single-products/AddToCart";
 import ProductRating from "@/components/single-products/ProductRating";
 
-async function SingleProductPage(params: { id: string }) {
+async function SingleProductPage({ params }: { params: { id: string } }) {
   const product = await fetchSingleProduct(params.id);
   const { name, image, company, description, price } = product;
   const dollarsAmount = formatCurrency(price);
