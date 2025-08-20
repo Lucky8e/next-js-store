@@ -8,7 +8,6 @@ import ProductRating from "@/components/single-products/ProductRating";
 
 type PageProps = {
   params: Promise<{ id: string }>; // Note: params is now a Promise!
-  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 async function SingleProductPage({ params }: PageProps) {
   const { id } = await params;
