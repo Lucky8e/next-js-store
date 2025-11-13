@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import ProductsGrid from "./ProductsGrid";
 import ProductsList from "./ProductsList";
 import { LuLayoutGrid, LuList } from "react-icons/lu";
