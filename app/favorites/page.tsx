@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import SectionTitle from "@/components/global/SectionTitle";
 import ProductsGrid from "@/components/products/ProductsGrid";
 import { fetchUserFavorite } from "@/utils/actions";
