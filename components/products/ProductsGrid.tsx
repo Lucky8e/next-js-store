@@ -1,4 +1,3 @@
-"use client";
 import { formatCurrency } from "@/utils/format";
 import { Product } from "@prisma/client";
 import Link from "next/link";
