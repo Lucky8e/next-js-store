@@ -8,7 +8,6 @@ import { cn } from "@/lib/utils";
 import { LuTrash2, LuSquarePen } from "react-icons/lu";
 import { SignInButton } from "@clerk/nextjs";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
-import { icons } from "lucide-react";
 
 type btnSize = "default" | "lg" | "sm";
 
