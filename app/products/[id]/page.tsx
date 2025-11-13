@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import BreadCrumbs from "@/components/single-products/BreadCrumbs";
 import { fetchSingleProduct } from "@/utils/actions";
 import Image from "next/image";
