@@ -5,8 +5,6 @@ import { redirect } from "next/navigation";
 import { imageSchema, productSchema, validateWithZodSchema } from "./schema";
 import { deleteImage, uploadImage } from "./supabase";
 import { revalidatePath } from "next/cache";
-import { toast } from "sonner";
-import FormContainer from "@/components/form/FormContainer";
 
 const getAuthUser = async () => {
   const user = await currentUser();

@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { fetchFeaturedProducts } from "@/utils/actions";
 import EmptyList from "../global/EmptyList";
 import SectionTitle from "../global/SectionTitle";
