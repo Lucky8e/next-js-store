@@ -1,8 +1,9 @@
+"use client";
 import { LuUserPlus } from "react-icons/lu";
-import { currentUser } from "@clerk/nextjs/server";
+import { useUser } from "@clerk/nextjs";
 
-async function UserIcon() {
-  const user = await currentUser();
+function UserIcon() {
+  const { user } = useUser();
   const profileImage = user?.imageUrl;
   if (profileImage)
     return (
