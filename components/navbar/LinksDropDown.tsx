@@ -1,3 +1,4 @@
+"use client";
 import { FiAlignLeft } from "react-icons/fi";
 import { links } from "@/utils/Links";
 import {
@@ -12,12 +13,14 @@ import { SignedIn, SignedOut, SignInButton, SignUpButton } from "@clerk/nextjs";
 import UserIcon from "./UserIcon";
 import { DropdownMenuSeparator } from "@radix-ui/react-dropdown-menu";
 import SignOutLink from "./SignOutLink";
-import { currentUser } from "@clerk/nextjs/server";
+// import { currentUser } from "@clerk/nextjs/server";
+import { useUser } from "@clerk/nextjs";
 
-async function LinksDropDown() {
-  const user = await currentUser();
+function LinksDropDown() {
+  // const user = await currentUser();
+  const { user } = useUser();
   const userId = user?.id;
-  const isAdmin = userId === process.env.ADMIN_USER_ID;
+  const isAdmin = userId === process.env.NEXT_PUBLIC_ADMIN_USER_ID;
 
   return (
     <DropdownMenu>
