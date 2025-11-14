@@ -14,22 +14,24 @@ const FavoriteToggleButton = ({ productId }: { productId: string }) => {
   const { user, isLoaded, isSignedIn } = useUser();
   const [favoriteId, setFavoriteId] = useState<string | null>(null);
 
-  // ⛔ If Clerk isn't ready yet — render nothing
-  if (!isLoaded) return null;
-
-  // ❌ If no user → show sign-in button
-  if (!isSignedIn || !user) {
-    return <CardSignInButton />;
-  }
-
   // ⭐ Fetch favorites ONLY when user exists
   useEffect(() => {
+    if (!isLoaded || !isSignedIn) return;
     async function loadFavorite() {
       const id = await fetchFavoriteId({ productId });
       setFavoriteId(id);
     }
     loadFavorite();
-  }, [productId]);
+  }, [isLoaded, isSignedIn, productId]);
+
+  // ⛔ If Clerk isn't ready yet — render nothing
+  if (!isLoaded) return null;
+
+  // ❌ If no user → show sign-in button
+
+  if (!isSignedIn || !user) {
+    return <CardSignInButton />;
+  }
 
   return <FavoriteToggleForm favoriteId={favoriteId} productId={productId} />;
 };
