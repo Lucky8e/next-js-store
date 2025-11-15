@@ -47,8 +47,9 @@ export default function FavoriteToggleForm({
         if (result?.message) {
           toast(result.message);
         }
-      } catch (_error) {
+      } catch (error) {
         // 🔥 Revert optimistic UI on error
+        console.error("Favorite toggle failed:", error);
         setOptimisticFav(wasFavorite);
         setCurrentFavId(favoriteId);
         toast.error("Something went wrong");
