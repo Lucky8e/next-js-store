@@ -1,29 +1,64 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import FormContainer from "../form/FormContainer";
+import { useState, useTransition } from "react";
 import { toggleFavoriteAction } from "@/utils/actions";
 import { CardSubmitButton } from "../form/Button";
+import { toast } from "sonner";
 
 type FavoriteToggleFormProps = {
   favoriteId: string | null;
   productId: string;
 };
 
-const FavoriteToggleForm = ({
+export default function FavoriteToggleForm({
   favoriteId,
   productId
-}: FavoriteToggleFormProps) => {
+}: FavoriteToggleFormProps) {
   const pathname = usePathname();
-  const toggleAction = toggleFavoriteAction.bind(null, {
-    productId,
-    favoriteId,
-    pathname
-  });
+
+  // Optimistic states
+  const [optimisticFav, setOptimisticFav] = useState(Boolean(favoriteId));
+  const [currentFavId, setCurrentFavId] = useState(favoriteId);
+
+  const [isPending, startTransition] = useTransition();
+
+  const handleClick = () => {
+    const wasFavorite = optimisticFav;
+
+    // ⭐ Optimistic UI toggle
+    setOptimisticFav(!optimisticFav);
+
+    // If removing → clear ID immediately
+    if (wasFavorite) {
+      setCurrentFavId(null);
+    }
+
+    // 🔥 Call server action
+    startTransition(async () => {
+      try {
+        const result = await toggleFavoriteAction({
+          productId,
+          favoriteId: currentFavId,
+          pathname
+        });
+
+        // ⭐ Show toast from server response
+        if (result?.message) {
+          toast(result.message);
+        }
+      } catch (err) {
+        // 🔥 Revert optimistic UI on error
+        setOptimisticFav(wasFavorite);
+        setCurrentFavId(favoriteId);
+        toast.error("Something went wrong");
+      }
+    });
+  };
+
   return (
-    <FormContainer action={toggleAction}>
-      <CardSubmitButton isFavorite={favoriteId ? true : false} />
-    </FormContainer>
+    <button type="button" onClick={handleClick}>
+      <CardSubmitButton isFavorite={optimisticFav} />
+    </button>
   );
-};
-export default FavoriteToggleForm;
+}
