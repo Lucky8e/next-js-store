@@ -21,7 +21,7 @@ export default function FavoriteToggleForm({
   const [optimisticFav, setOptimisticFav] = useState(Boolean(favoriteId));
   const [currentFavId, setCurrentFavId] = useState(favoriteId);
 
-  const [isPending, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
 
   const handleClick = () => {
     const wasFavorite = optimisticFav;
@@ -47,7 +47,7 @@ export default function FavoriteToggleForm({
         if (result?.message) {
           toast(result.message);
         }
-      } catch (err) {
+      } catch (_error) {
         // 🔥 Revert optimistic UI on error
         setOptimisticFav(wasFavorite);
         setCurrentFavId(favoriteId);
