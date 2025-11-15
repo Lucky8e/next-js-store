@@ -11,6 +11,8 @@ function UserIcon() {
       <Image
         alt="User Profile Image"
         src={profileImage}
+        width={24}
+        height={24}
         className="w-6 h-6 rounded-full object-cover"
       />
     );

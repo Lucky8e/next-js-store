@@ -25,6 +25,7 @@ export default function FavoriteToggleForm({
 
   const handleClick = () => {
     const wasFavorite = optimisticFav;
+    const oldFavoriteId = currentFavId; //  NEW — CAPTURE ID BEFORE UI UPDATES
 
     // ⭐ Optimistic UI toggle
     setOptimisticFav(!optimisticFav);
@@ -39,7 +40,7 @@ export default function FavoriteToggleForm({
       try {
         const result = await toggleFavoriteAction({
           productId,
-          favoriteId: currentFavId,
+          favoriteId: oldFavoriteId,
           pathname
         });
 
@@ -51,7 +52,7 @@ export default function FavoriteToggleForm({
         // 🔥 Revert optimistic UI on error
         console.error("Favorite toggle failed:", error);
         setOptimisticFav(wasFavorite);
-        setCurrentFavId(favoriteId);
+        setCurrentFavId(oldFavoriteId);
         toast.error("Something went wrong");
       }
     });
