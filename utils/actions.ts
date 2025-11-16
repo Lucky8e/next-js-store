@@ -227,7 +227,8 @@ export const toggleFavoriteAction = async (prevState: {
 export const fetchUserFavorite = async () => {
   const { userId } = await auth();
   if (!userId) {
-    return { message: "Not authenticated" };
+    // return { message: "Not authenticated" };
+    return [];
   }
   const favorite = await db.favorite.findMany({
     where: {
