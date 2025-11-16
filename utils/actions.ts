@@ -1,6 +1,6 @@
 "use server";
 import db from "@/utils/db";
-import { currentUser } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { imageSchema, productSchema, validateWithZodSchema } from "./schema";
 import { deleteImage, uploadImage } from "./supabase";
@@ -173,11 +173,12 @@ export const updateProductImageAction = async (
 };
 
 export const fetchFavoriteId = async ({ productId }: { productId: string }) => {
-  const user = await getAuthUser();
+  const { userId } = await auth();
+  if (!userId) return null;
   const favorite = await db.favorite.findFirst({
     where: {
       productId,
-      clerkId: user.id
+      clerkId: userId
     },
     select: {
       id: true
@@ -191,7 +192,10 @@ export const toggleFavoriteAction = async (prevState: {
   favoriteId: string | null;
   pathname: string;
 }) => {
-  const user = await getAuthUser();
+  const { userId } = await auth();
+  if (!userId) {
+    return { message: "Not authenticated" };
+  }
   const { productId, favoriteId, pathname } = prevState;
   try {
     if (favoriteId) {
@@ -204,7 +208,7 @@ export const toggleFavoriteAction = async (prevState: {
       await db.favorite.create({
         data: {
           productId: productId,
-          clerkId: user.id
+          clerkId: userId
         }
       });
     }
@@ -221,10 +225,13 @@ export const toggleFavoriteAction = async (prevState: {
 };
 
 export const fetchUserFavorite = async () => {
-  const user = await getAuthUser();
+  const { userId } = await auth();
+  if (!userId) {
+    return { message: "Not authenticated" };
+  }
   const favorite = await db.favorite.findMany({
     where: {
-      clerkId: user.id
+      clerkId: userId
     },
     include: {
       product: true
