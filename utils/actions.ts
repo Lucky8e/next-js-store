@@ -189,35 +189,39 @@ export const fetchFavoriteId = async ({ productId }: { productId: string }) => {
 
 export const toggleFavoriteAction = async (prevState: {
   productId: string;
-  favoriteId: string | null;
   pathname: string;
 }) => {
   const { userId } = await auth();
   if (!userId) {
     return { message: "Not authenticated" };
   }
-  const { productId, favoriteId, pathname } = prevState;
+  const { productId, pathname } = prevState;
+
   try {
-    if (favoriteId) {
+    const existing = await db.favorite.findFirst({
+      where: {
+        productId: productId,
+        clerkId: userId
+      }
+    });
+    if (existing) {
       await db.favorite.delete({
         where: {
-          id: favoriteId
+          id: existing.id
         }
       });
-    } else {
-      await db.favorite.create({
-        data: {
-          productId: productId,
-          clerkId: userId
-        }
-      });
+      revalidatePath(pathname);
+      return { message: "Product removed from the favorites" };
     }
+
+    await db.favorite.create({
+      data: {
+        productId,
+        clerkId: userId
+      }
+    });
     revalidatePath(pathname);
-    return {
-      message: favoriteId
-        ? "Product removed from favorites"
-        : "Product added to favorites"
-    };
+    return { message: "Product added to the favorites" };
   } catch (error) {
     renderError(error);
     return { message: "Error" };

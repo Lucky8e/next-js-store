@@ -86,14 +86,42 @@ export const CardSignInButton = () => {
   );
 };
 
-export const CardSubmitButton = ({ isFavorite }: { isFavorite: boolean }) => {
+// export const CardSubmitButton = ({ isFavorite }: { isFavorite: boolean }) => {
+//   const { pending } = useFormStatus();
+//   return (
+//     <Button
+//       type="submit"
+//       size="icon"
+//       variant="outline"
+//       className="p-2 cursor-pointer"
+//     >
+//       {pending ? (
+//         <ReloadIcon className="animate-spin" />
+//       ) : isFavorite ? (
+//         <FaHeart />
+//       ) : (
+//         <FaRegHeart />
+//       )}
+//     </Button>
+//   );
+// };
+
+export const CardSubmitButton = ({
+  isFavorite,
+  onClick
+}: {
+  isFavorite: boolean;
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+}) => {
   const { pending } = useFormStatus();
+
   return (
     <Button
-      type="submit"
+      type="button"
       size="icon"
       variant="outline"
       className="p-2 cursor-pointer"
+      onClick={onClick}
     >
       {pending ? (
         <ReloadIcon className="animate-spin" />

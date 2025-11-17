@@ -7,40 +7,32 @@ import { CardSubmitButton } from "../form/Button";
 import { toast } from "sonner";
 
 type FavoriteToggleFormProps = {
-  favoriteId: string | null;
+  isFavoriteInitial: boolean;
   productId: string;
 };
 
 export default function FavoriteToggleForm({
-  favoriteId,
+  isFavoriteInitial,
   productId
 }: FavoriteToggleFormProps) {
   const pathname = usePathname();
 
   // Optimistic states
-  const [optimisticFav, setOptimisticFav] = useState(Boolean(favoriteId));
-  const [currentFavId, setCurrentFavId] = useState(favoriteId);
+  const [optimisticFav, setOptimisticFav] = useState(
+    Boolean(isFavoriteInitial)
+  );
 
   const [, startTransition] = useTransition();
 
   const handleClick = () => {
     const wasFavorite = optimisticFav;
-    const oldFavoriteId = currentFavId; //  NEW — CAPTURE ID BEFORE UI UPDATES
-
-    // ⭐ Optimistic UI toggle
-    setOptimisticFav(!optimisticFav);
-
-    // If removing → clear ID immediately
-    if (wasFavorite) {
-      setCurrentFavId(null);
-    }
+    setOptimisticFav(!wasFavorite); //  NEW — CAPTURE ID BEFORE UI UPDATES
 
     // 🔥 Call server action
     startTransition(async () => {
       try {
         const result = await toggleFavoriteAction({
           productId,
-          favoriteId: oldFavoriteId,
           pathname
         });
 
@@ -52,15 +44,18 @@ export default function FavoriteToggleForm({
         // 🔥 Revert optimistic UI on error
         console.error("Favorite toggle failed:", error);
         setOptimisticFav(wasFavorite);
-        setCurrentFavId(oldFavoriteId);
         toast.error("Something went wrong");
       }
     });
   };
 
   return (
-    <button type="button" onClick={handleClick}>
-      <CardSubmitButton isFavorite={optimisticFav} />
-    </button>
+    <CardSubmitButton
+      onClick={(e) => {
+        e.stopPropagation(); // prevent clicking the parent <Link>
+        handleClick();
+      }}
+      isFavorite={optimisticFav}
+    />
   );
 }

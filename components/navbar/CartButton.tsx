@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Button } from "../ui/button";
 import { BsCart3 } from "react-icons/bs";
 
-async function CartButton() {
+function CartButton() {
   //temp
   const numItemsInCart = 9;
 
