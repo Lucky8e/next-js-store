@@ -20,8 +20,6 @@ function RatingInput({
     return value.toString();
   }).reverse();
 
-  const [value, setValue] = useState(number[0]);
-
   return (
     <div className="mb-6 max-w-xs">
       <Label htmlFor={name} className="capitalize mb-2">
