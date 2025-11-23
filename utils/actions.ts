@@ -2,7 +2,12 @@
 import db from "@/utils/db";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-import { imageSchema, productSchema, validateWithZodSchema } from "./schema";
+import {
+  imageSchema,
+  productSchema,
+  reviewSchema,
+  validateWithZodSchema
+} from "./schema";
 import { deleteImage, uploadImage } from "./supabase";
 import { revalidatePath } from "next/cache";
 
@@ -231,7 +236,6 @@ export const toggleFavoriteAction = async (prevState: {
 export const fetchUserFavorite = async () => {
   const { userId } = await auth();
   if (!userId) {
-    // return { message: "Not authenticated" };
     return [];
   }
   const favorite = await db.favorite.findMany({
@@ -244,3 +248,61 @@ export const fetchUserFavorite = async () => {
   });
   return favorite;
 };
+
+//----------Review Functions----------//
+
+export const createReviewAction = async (
+  prevState: any,
+  formData: FormData
+) => {
+  const user = await getAuthUser();
+  try {
+    const rawData = Object.fromEntries(formData);
+    const validatedFields = validateWithZodSchema(reviewSchema, rawData);
+    await db.review.create({
+      data: {
+        ...validatedFields,
+        clerkId: user.id
+      }
+    });
+    revalidatePath(`/products/${validatedFields.productId}`);
+    return { message: "Review Submitted Successfully" };
+  } catch (error) {
+    return renderError(error);
+  }
+};
+
+export const fetchProductReviews = async (productId: string) => {
+  const reviews = await db.review.findMany({
+    where: {
+      productId: productId
+    },
+    orderBy: {
+      createdAt: "desc"
+    }
+  });
+  return reviews;
+};
+
+export const fetchProductRating = async (productId: string) => {
+  const result = await db.review.groupBy({
+    by: ["productId"],
+    _avg: {
+      rating: true
+    },
+    _count: {
+      rating: true
+    },
+    where: {
+      productId: productId
+    }
+  });
+  return {
+    rating: result[0]?._avg.rating?.toFixed(1) ?? 0,
+    count: result[0]?._count.rating ?? 0
+  };
+};
+
+export const fetchProductReviewsByUser = async () => {};
+export const deleteReviewAction = async () => {};
+export const findExistingReview = async () => {};

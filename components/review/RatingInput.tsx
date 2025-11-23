@@ -1,0 +1,47 @@
+import { Label } from "@/components/ui/label";
+import { useState } from "react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from "@/components/ui/select";
+
+function RatingInput({
+  name,
+  labelText
+}: {
+  name: string;
+  labelText?: string;
+}) {
+  const number = Array.from({ length: 5 }, (_, i) => {
+    const value = i + 1;
+    return value.toString();
+  }).reverse();
+
+  const [value, setValue] = useState(number[0]);
+
+  return (
+    <div className="mb-6 max-w-xs">
+      <Label htmlFor={name} className="capitalize mb-2">
+        {labelText || name}
+      </Label>
+      <Select defaultValue={number[0]} name={name} required>
+        <SelectTrigger>
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          {number.map((number) => {
+            return (
+              <SelectItem key={number} value={number}>
+                {number}
+              </SelectItem>
+            );
+          })}
+        </SelectContent>
+      </Select>
+    </div>
+  );
+}
+export default RatingInput;

@@ -7,6 +7,9 @@ import { formatCurrency } from "@/utils/format";
 import FavoriteToggleButton from "@/components/products/FavoriteToggleButton";
 import AddToCart from "@/components/single-products/AddToCart";
 import ProductRating from "@/components/single-products/ProductRating";
+import ShareButton from "@/components/single-products/ShareButton";
+import SubmitReview from "@/components/review/SubmitReview";
+import ProductReviews from "@/components/review/ProductReviews";
 
 type PageProps = {
   params: Promise<{ id: string }>; // Note: params is now a Promise!
@@ -35,7 +38,10 @@ async function SingleProductPage({ params }: PageProps) {
         <div>
           <div className="flex gap-x-8 items-center">
             <h1 className="capitalize text-3xl font-bold">{name}</h1>
-            <FavoriteToggleButton productId={id} />
+            <div className="flex items-center gap-x-2">
+              <FavoriteToggleButton productId={id} />
+              <ShareButton productId={id} name={name} />
+            </div>
           </div>
           <ProductRating productId={id} />
           <h4 className="text-xl mt-2">{company}</h4>
@@ -46,6 +52,8 @@ async function SingleProductPage({ params }: PageProps) {
           <AddToCart productId={id} />
         </div>
       </div>
+      <ProductReviews productId={id} />
+      <SubmitReview productId={id} />
     </section>
   );
 }
