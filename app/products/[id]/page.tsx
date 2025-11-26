@@ -1,7 +1,7 @@
 export const dynamic = "force-dynamic";
 
 import BreadCrumbs from "@/components/single-products/BreadCrumbs";
-import { fetchSingleProduct } from "@/utils/actions";
+import { fetchSingleProduct, findExistingReview } from "@/utils/actions";
 import Image from "next/image";
 import { formatCurrency } from "@/utils/format";
 import FavoriteToggleButton from "@/components/products/FavoriteToggleButton";
@@ -10,6 +10,7 @@ import ProductRating from "@/components/single-products/ProductRating";
 import ShareButton from "@/components/single-products/ShareButton";
 import SubmitReview from "@/components/review/SubmitReview";
 import ProductReviews from "@/components/review/ProductReviews";
+import { auth } from "@clerk/nextjs/server";
 
 type PageProps = {
   params: Promise<{ id: string }>; // Note: params is now a Promise!
@@ -19,6 +20,8 @@ async function SingleProductPage({ params }: PageProps) {
   const product = await fetchSingleProduct(id);
   const { name, image, company, description, price } = product;
   const dollarsAmount = formatCurrency(price);
+  const { userId } = await auth();
+  const reviewDoesNotExist = userId && !(await findExistingReview(userId, id));
   return (
     <section>
       <BreadCrumbs name={name} />
@@ -53,7 +56,7 @@ async function SingleProductPage({ params }: PageProps) {
         </div>
       </div>
       <ProductReviews productId={id} />
-      <SubmitReview productId={id} />
+      {reviewDoesNotExist && <SubmitReview productId={id} />}
     </section>
   );
 }

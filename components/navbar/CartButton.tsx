@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { Button } from "../ui/button";
 import { BsCart3 } from "react-icons/bs";
+import { fetchCartItems } from "@/utils/actions";
 
 function CartButton() {
-  //temp
-  const numItemsInCart = 9;
+  const numItemsInCart = fetchCartItems();
 
   return (
     <Button
