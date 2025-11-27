@@ -4,6 +4,7 @@ import { BsCart3 } from "react-icons/bs";
 import { fetchCartItems } from "@/utils/actions";
 
 function CartButton() {
+  //temp
   const numItemsInCart = fetchCartItems();
 
   return (
