@@ -38,67 +38,23 @@
 // // export default FavoriteToggleButton;
 // // //
 
-// import { auth } from "@clerk/nextjs/server";
-// import { fetchFavoriteId } from "@/utils/actions";
-// import FavoriteToggleForm from "./FavoriteToggleForm";
-// import { CardSignInButton } from "../form/Button";
-
-// export default async function FavoriteToggleButton({
-//   productId
-// }: {
-//   productId: string;
-// }) {
-//   const { userId } = await auth();
-//   console.log("SERVER USER IN PRODUCTION:", userId);
-
-//   if (!userId) return <CardSignInButton />;
-
-//   const favoriteId = await fetchFavoriteId({ productId });
-
-//   return (
-//     <FavoriteToggleForm
-//       productId={productId}
-//       isFavoriteInitial={Boolean(favoriteId)}
-//     />
-//   );
-// }
-
-"use client";
-
-import { useUser } from "@clerk/nextjs";
-import { CardSignInButton } from "../form/Button";
+import { auth } from "@clerk/nextjs/server";
 import { fetchFavoriteId } from "@/utils/actions";
 import FavoriteToggleForm from "./FavoriteToggleForm";
-import { useEffect, useState } from "react";
+import { CardSignInButton } from "../form/Button";
 
-export default function FavoriteToggleButton({
+export default async function FavoriteToggleButton({
   productId
 }: {
   productId: string;
 }) {
-  const { user, isLoaded, isSignedIn } = useUser();
-  const [favoriteId, setFavoriteId] = useState<string | null>(null);
+  const { userId } = await auth();
+  console.log("SERVER USER IN PRODUCTION:", userId);
 
-  // Load favorite ID on client after user loads
-  useEffect(() => {
-    if (!isLoaded || !isSignedIn) return;
+  if (!userId) return <CardSignInButton />;
 
-    async function loadFavorite() {
-      const id = await fetchFavoriteId({ productId });
-      setFavoriteId(id);
-    }
+  const favoriteId = await fetchFavoriteId({ productId });
 
-    loadFavorite();
-  }, [isLoaded, isSignedIn, productId]);
-
-  if (!isLoaded) return null;
-
-  // If user not logged in → show sign-in modal heart
-  if (!isSignedIn) {
-    return <CardSignInButton />;
-  }
-
-  // Logged-in user → render actual favorite toggle
   return (
     <FavoriteToggleForm
       productId={productId}
