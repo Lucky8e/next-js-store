@@ -49,6 +49,7 @@ export default async function FavoriteToggleButton({
   productId: string;
 }) {
   const { userId } = await auth();
+  console.log("SERVER USER IN PRODUCTION:", userId);
 
   if (!userId) return <CardSignInButton />;
 
