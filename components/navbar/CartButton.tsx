@@ -3,9 +3,9 @@ import { Button } from "../ui/button";
 import { BsCart3 } from "react-icons/bs";
 import { fetchCartItems } from "@/utils/actions";
 
-function CartButton() {
+async function CartButton() {
   //temp
-  const numItemsInCart = fetchCartItems();
+  const numItemsInCart = await fetchCartItems();
 
   return (
     <Button
