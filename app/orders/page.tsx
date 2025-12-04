@@ -11,7 +11,6 @@ import {
 import SectionTitle from "@/components/global/SectionTitle";
 import { fetchUserOrders } from "@/utils/actions";
 import { formatCurrency, formatDate } from "@/utils/format";
-import { Section } from "lucide-react";
 
 async function OrdersPage() {
   const orders = await fetchUserOrders();

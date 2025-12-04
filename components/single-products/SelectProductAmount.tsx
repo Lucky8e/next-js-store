@@ -5,7 +5,6 @@ import {
   SelectTrigger,
   SelectValue
 } from "@/components/ui/select";
-import { SelectItemIndicatorProps } from "@radix-ui/react-select";
 
 export enum Mode {
   SingleProduct = "singleProduct",
